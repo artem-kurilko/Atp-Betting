@@ -1,0 +1,15 @@
+# dataset
+Data/
+
+# pycharm config
+.idea/
+Python/__pycache__
+
+# selenium google cookie
+*.google-cookie
+
+# python env
+/venv
+
+# log files
+logs.txt

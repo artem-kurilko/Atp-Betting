@@ -1,8 +1,3 @@
-import os
-from pathlib import Path
-
-import openpyxl
-
 """
 Building of the raw dataset
 
@@ -10,6 +5,11 @@ Importation of the Excel files - 1 per year
 Some preprocessing is necessary because for several years the ranking are not present.
 Store data in this format: id, date, wName, lName, wRank, lRank, wElo, lElo, wAmountOfAllWins, lAmountOfAllWins
 """
+
+import os
+from pathlib import Path
+
+import openpyxl
 
 
 def build_dataset():
@@ -129,6 +129,7 @@ def remove_rows_with_blank_values():
     out_workbook.save('atp_data_f.xlsx')
     out_workbook.close()
     workbook.close()
+
 
 def recalculate_total_amount_of_wins():
     """

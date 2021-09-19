@@ -6,11 +6,11 @@ It uses beautiful soup for parsing data and retrieving matches parameters.
 # FIXME:
 #  add parsing utr matches
 
+import requests as r
+import re
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from googlesearch import search
-import requests as r
-import re
 
 
 def get_matches():
@@ -101,16 +101,16 @@ def get_matches():
                             first_player = first_player.replace('-', ' ')
                             second_player = second_player.replace('-', ' ')
                             player_names = [first_player, second_player]
-                            player_elo = elo_ranking(player_names)
+                            player_elo = get_elo_ranking(player_names)
                             if player_elo[0] is None or player_elo[1] is None:
                                 continue
 
                             # get total amount of wins
                             try:
-                                first_player_wins = total_amount_of_wins(first_player)
-                                second_player_wins = total_amount_of_wins(second_player)
-                            except:
-                                print('Error while parsing total wins for players:', first_player, second_player)
+                                first_player_wins = get_total_amount_of_wins(first_player)
+                                second_player_wins = get_total_amount_of_wins(second_player)
+                            except Exception as e:
+                                print('Error while parsing total wins for players:', first_player, second_player, e)
                                 continue
 
                             result = time + ', ' + first_player + ', ' + second_player + ', ' + \
@@ -128,7 +128,7 @@ def get_matches():
     return matches
 
 
-def elo_ranking(player_names: list):
+def get_elo_ranking(player_names: list):
     """
     Gets player's elo ranking by name.
 
@@ -139,7 +139,10 @@ def elo_ranking(player_names: list):
     """
 
     url = 'http://tennisabstract.com/reports/atp_elo_ratings.html'
-    page = r.get(url)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36'
+    }
+    page = r.get(url, headers=headers)
     check_status_code(page)
 
     # parse web page and extract elo ranking
@@ -187,7 +190,7 @@ def elo_ranking(player_names: list):
     return elo_list
 
 
-def total_amount_of_wins(name: str):
+def get_total_amount_of_wins(name: str):
     """
     Retrieves total amount of wins for specified player.
     Parsing atptour.com page.
@@ -229,4 +232,7 @@ def check_status_code(page: r.Response):
     @type page request.model.Response
     """
     if page.status_code != 200:
-        print("Error, status code: " + str(page.status_code) + "\nUrl: " + page.url)
+        print("Error, status code: " + str(page.status_code) + " url: " + page.url)
+
+
+print(get_total_amount_of_wins('Auger Aliassime'))

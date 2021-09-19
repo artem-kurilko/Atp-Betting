@@ -47,12 +47,12 @@ model = xgboost.XGBClassifier(learning_rate=0.017,
 # Train model
 model.fit(X, Y)
 
-# Predict matches
+# Get upcoming matches
 matches = automation.get_matches()
-
 log.info('\n')
 tournament_name = ''
 
+# Predict each match and log the result
 for match in matches:
     match_values = match.split(',')
 
